@@ -44,9 +44,7 @@ class IrradianceDataset(pd.DataFrame):
         return 'ghi' in c and 'dhi' not in c and 'dni' not in c
 
     def complete_irradiance(self):
-        """This code adapted from pvlib.
-        Note that this method currently modifies the dataframe inplace!
-        """
+        """This code adapted from pvlib."""
         cols = set(self.columns)
 
         if {'ghi', 'dhi'} <= cols and 'dni' not in cols:
