@@ -6,5 +6,5 @@ setup(
     description='Proof-of-concept code for irradiance sampling synthesis',
     python_requires='>=3.5',
     packages=find_packages(exclude=['tests', 'datasets']),
-    install_requires=['numpy', 'pandas', 'statsmodels']
+    install_requires=['numpy', 'pandas', 'pvlib', 'statsmodels']
 )
