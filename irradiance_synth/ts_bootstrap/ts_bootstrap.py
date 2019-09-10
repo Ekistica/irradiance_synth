@@ -47,7 +47,7 @@ def ts_bootstrap(data, index, chunk_size='D', pool_selector=None, random_seed=No
         seed(random_seed)
 
     # the keys for the chunks of the new index that we need to fill
-    dest_keys = date_range(index[0], index[-1], normalize=True, freq=chunk_size)
+    dest_keys = date_range(index[0], index[-1], freq=chunk_size)
 
     # resample the input data so that it is in the same frequency as the target index
     # TODO: aggregation function should be customisable

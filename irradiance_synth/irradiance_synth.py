@@ -29,18 +29,22 @@ class IrradianceSynthesizer:
         if feature_space is None:
             feature_space = default_feature_space
 
-        target = target_irradiance
+        target = target_irradiance.k_star.ghi
+        # target.index = target.index.tz_localize(None)
+
+        source = self.source.k_star.ghi
+        # source.index = source.index.tz_localize(None)
 
         out_ix = pd.date_range(
             target.index[0],
             target.index[-1],
-            freq=self.source.index.freq,
-            # tz=target.location.tz
-        ).tz_localize(None)
+            freq=source.index.freq,
+            tz=target.index.tz
+        )
 
         log.info("Generating feature space")
-        target_features = feature_space(target.k_star.ghi, chunk_size)
-        source_features = feature_space(self.source.k_star.ghi.resample(target.index.freq).mean(), chunk_size)
+        target_features = feature_space(target, chunk_size)
+        source_features = feature_space(source.resample(target.index.freq).mean(), chunk_size)
 
         if sampling_method == 'weighted':
             selector = ts_bootstrap.WeightedRandomPoolSelector(source_features, target_features)
@@ -76,7 +80,7 @@ class IrradianceSynthesizer:
         )
 
         out = out.asfreq(self.source.index.freq)
-        out.index = out.index.tz_localize(target.location.tz)
+        # out.index = out.index.tz_localize(target_irradiance.location.tz)
 
-        return IrradianceDataset(out, location=target.location)
+        return IrradianceDataset(out, location=target_irradiance.location)
 
