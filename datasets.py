@@ -8,12 +8,17 @@ log = logging.getLogger(__name__)
 
 DATASETS_PATH = Path('datasets')
 
+def _find_prefixed_dat_files(prefix):
+    return list(DATASETS_PATH.glob(f"{prefix}_*.dat"))
+
 def load_alice_5s():
     log.info("Reading Alice Springs 5-second irradiance file...")
     loc = Location(-23.7624, 133.8754, altitude=580.0, tz="Australia/Darwin", name='Alice Springs')
-    df = pd.read_csv(DATASETS_PATH / 'ASP_07-2019_08-2019_A.dat',
-        index_col='Time', parse_dates=True, 
-     )[['GHI', 'DNI']].asfreq('5S')
+    df = pd.concat([
+        pd.read_csv(_find_prefixed_dat_files("ASP"),
+            index_col='Time', parse_dates=True
+        )
+    ])[['GHI', 'DNI']].asfreq('5S')
     df.index = df.index.tz_localize(loc.tz)
     df.columns = ['ghi', 'dni']
     return IrradianceDataset(df, location=loc)
@@ -33,9 +38,11 @@ def load_alice_5m():
 def load_darwin_5s():
     log.info("Reading Darwin 5-second irradiance file...")
     loc = Location(-12.4417, 130.9215, altitude=10.0, tz="Australia/Darwin", name='Darwin')
-    df = pd.read_csv(DATASETS_PATH / 'DRW_07-2019_08-2019_A.dat',
-        index_col='Time', parse_dates=True, 
-     )[['GHI']].asfreq('5S')
+    df = pd.concat([
+        pd.read_csv(_find_prefixed_dat_files("DRW"),
+            index_col='Time', parse_dates=True
+        )
+    ])[['GHI', 'DNI']].asfreq('5S')
     df.index = df.index.tz_localize(loc.tz)
     df.columns = ['ghi']
     return IrradianceDataset(df, location=loc)
@@ -43,14 +50,17 @@ def load_darwin_5s():
 def load_katherine_5s():
     log.info("Reading Katherine 5-second irradiance file...")
     loc = Location(-14.4747, 132.3050, altitude=108.0, tz="Australia/Darwin", name='Katherine')
-    df = pd.read_csv(DATASETS_PATH / 'KTR_07-2019_08-2019_A.dat',
-        index_col='Time', parse_dates=True, 
-     )[['GHI', 'DNI']].asfreq('5S')
+    df = pd.concat([
+        pd.read_csv(_find_prefixed_dat_files("KTR"),
+            index_col='Time', parse_dates=True
+        )
+    ])[['GHI', 'DNI']].asfreq('5S')
     df.index = df.index.tz_localize(loc.tz)
     df.columns = ['ghi', 'dni']
     return IrradianceDataset(df, location=loc)
     
 def load_hawaii_3s_csv():
+    # TODO: Don't actually need Dask for this. Should remove the dependency.
     from dask.diagnostics import ProgressBar
     import dask.dataframe as ddf
     loc = Location(21.31034, -158.08675, tz='HST', altitude=11)
@@ -58,6 +68,7 @@ def load_hawaii_3s_csv():
     df.columns = ['S', 'Y', 'DOY', 'HHMM', 'ghi', 'dhi', 'dni']
 
     log.info("Reading Hawaii 3-second irradiance CSV files (takes up to 10 minutes)...")
+
     def get_datetime_index(df):
         str_datetime = df[['Y', 'DOY', 'HHMM', 'S']].astype(str).apply(lambda x: ' '.join(x), axis=1)
         datetimes = pd.to_datetime(str_datetime, format='%Y %j %H%M %S')
