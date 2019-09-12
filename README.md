@@ -16,3 +16,7 @@ output = synth.synthesize(target=alice['2017-12'], chunk_size='D')
 ```
 
 ![Rainbow example](https://github.com/Ekistica/irradiance_synth/raw/master/figures/rainbow_example.png?s=500)
+
+## Datasets
+
+This repository contains some routines for reading publically available irradiance datasets. However, the datasets themselves are not included. See [here](https://github.com/Ekistica/irradiance_synth/blob/master/datasets/README.md) for more detail.
