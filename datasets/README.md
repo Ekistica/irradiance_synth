@@ -2,7 +2,7 @@
 
 The script `datasets.py` provides methods for reading publically available irradiance data from a few difference sources. Each function returns the data as an `irradiance_synth.IrradianceDataset` object. However, the datasets themselves are not included in this repository.
 
-To use the example datasets, plesae follow the instructions below.
+To use the example datasets, please follow the instructions below.
 
 ## Oahu Solar Measurement Grid 3-second Data
 
@@ -17,13 +17,9 @@ To use the example datasets, plesae follow the instructions below.
 2. In the "Download by Year" area, choose one or more of the `.dat` files
 3. Place the downloaded files in the `datasets/` folder
 4. To read the data, choose the corresponding function:
-
     * `datasets.load_alice_5s()`
-
     * `datasets.load_katherine_5s()`
-
     * `datasets.load_darwin_5s()`
-
     * `datasets.load_tennant_5s()`
 
 ## Desert Knowledge Australia 5-Minute Data
