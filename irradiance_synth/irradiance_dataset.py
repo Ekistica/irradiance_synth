@@ -7,6 +7,46 @@ import logging
 log = logging.getLogger(__name__)
 
 class IrradianceDataset(pd.DataFrame):
+    """pandas.DataFrame extension class for location-aware irradiance data
+    
+    This class is intended to make life a bit easier when working with irradiance
+    datasets. It extends pandas.DataFrame by adding a `location` attribute, which
+    gives access to a pvlib.location.Location object, allowing for generation
+    of solar position and clear sky data.
+
+    In addition, several helper attributes are provided to automate certain
+    operations:
+
+
+    Parameters
+    ----------
+
+    data : a pandas.Datafame, OR any argument that can be passed to a DataFrame
+           constructor, such as a list of dicts.
+
+    location : a pvlib.location.Location instance
+
+    Attributes
+    ----------
+
+    g : irradiance components
+    clear : clear-sky irradiance components
+    sp : solar position data
+    k : clearness index coponents
+    k_star : filtered clearness index components
+
+    k_star_angle : solar elevation threshold for the filtered clearness index
+                   set to 8.0 be default
+    k_star_sensitivity : sensitivity parameter for the filtered clearness index
+                         set to 50 by default
+
+    Example
+    -------
+    ```    
+    data = IrradianceDataset(df, location)
+    data.k_star.plot()
+    ```
+    """
     _metadata = ['location', 'k_star_sensitivity', 'k_star_angle'] 
 
     @classmethod
