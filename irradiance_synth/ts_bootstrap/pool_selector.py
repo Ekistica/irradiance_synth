@@ -58,8 +58,3 @@ class KNNPoolSelector(PoolSelector):
         norms = Series(norm(vect_diff, ord=self.norm_ord, axis=1), index=vect_diff.index)
         sorted_norms = norms.sort_values(ascending=True)
         return list(sorted_norms.head(self.k).index)
-
-class SeasonalPoolSelector(PoolSelector):
-    def __init__(self, k=1):
-        pass
-
