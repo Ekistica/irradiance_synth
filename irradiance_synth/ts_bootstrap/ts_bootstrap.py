@@ -4,9 +4,10 @@ from pandas.tseries.frequencies import to_offset
 from numpy import array
 from numpy.random import choice, seed
 
-from irradiance_synth.ts_bootstrap import stitch
+from irradiance_synth.ts_bootstrap.stitch import stitch
+from irradiance_synth.ts_bootstrap.pool_selector import NullPoolSelector
 
-def ts_bootstrap(data, index, chunk_size='D', pool_selector=None, random_seed=None, stitch_boundaries=True):
+def ts_bootstrap(data, index, chunk_size='D', pool_selector=None, random_seed=None, stitch_boundaries=False):
     """Sample from chunks of a timeseries or timedataframe to produce a new series or dataframe with a given index.
 
     The new data is assembled in chunks of a fixed `chunk_size` (a pandas offset string).
@@ -33,6 +34,8 @@ def ts_bootstrap(data, index, chunk_size='D', pool_selector=None, random_seed=No
     ----
     * allow a user-defined aggregation/interpolation method if the source data needs resampling
     """
+    if pool_selector is None:
+        pool_selector = NullPoolSelector()
 
     if not isinstance(data, NDFrame):
         raise Exception(f"expected series :: pandas.NDFrame, got {type(data)}")

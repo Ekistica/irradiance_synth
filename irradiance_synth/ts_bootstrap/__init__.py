@@ -2,7 +2,6 @@ from irradiance_synth.ts_bootstrap.pool_selector import (
         NullPoolSelector,
         FunctionPoolSelector,
         KNNPoolSelector,
-        SeasonalPoolSelector,
         WeightedRandomPoolSelector
 )
 
